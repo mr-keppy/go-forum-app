@@ -1,0 +1,5 @@
+drop_foreign_key("questions", "questions_categoryId_fk", {"if_exists": true})
+drop_foreign_key("questions", "questions_user_fk", {"if_exists": true})
+drop_foreign_key("replies", "replies_user_fk", {"if_exists": true})
+drop_foreign_key("replies", "replies_reply_fk", {"if_exists": true})
+drop_foreign_key("replies", "replies_question_fk", {"if_exists": true})

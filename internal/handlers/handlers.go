@@ -96,6 +96,27 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	})
 
 }
+// register page is the register handler
+func (m *Repository) Register(w http.ResponseWriter, r *http.Request) {
+	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
+	render.Template(w, r, "register.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+
+}
+
+// ask-question page is the ask-question handler
+func (m *Repository) AskQuestion(w http.ResponseWriter, r *http.Request) {
+	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
+	render.Template(w, r, "ask-question.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+
+}
 
 // About this about handler
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {

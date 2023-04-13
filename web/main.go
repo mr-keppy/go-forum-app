@@ -31,7 +31,7 @@ func run() (*driver.DB, error){
 
 	inProduction := *flag.Bool("production",true, "Application is in production")
 	useCache:= *flag.Bool("cache",true, "use template cache")
-	dbName:= flag.String("dbname","bookings","DB Name")
+	dbName:= flag.String("dbname","forum","DB Name")
 	dbHost:= flag.String("dbhost","localhost","DB ost")
 	dbUser:= flag.String("dbuser","kishorpadmanabhan","DB User")
 	dbPass:= flag.String("dbpass","","DB Pass")

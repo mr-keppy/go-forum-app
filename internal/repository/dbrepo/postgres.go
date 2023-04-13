@@ -13,6 +13,28 @@ func (m *postgreDBRepo) AllUsers() bool {
 	return true
 }
 
+//create user
+func (m *postgreDBRepo) CreateUser(u models.User) ( error){
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+	defer cancel()
+
+	query := `
+	INSERT INTO public.users
+		(first_name, last_name, email, "password", access_level, created_at, updated_at)
+		VALUES($1, $2, $3, $4, 1, $5, $6);
+		`
+
+	_, err := m.DB.ExecContext(ctx, query, u.FirstName, u.LastName, u.Email, u.Password, u.AccessLevel,time.Now(), time.Now())
+	if err != nil{
+		return err
+	}else{
+		return nil
+	}
+}
+
+//get user
 func (m *postgreDBRepo) GetUserByID(id int) (models.User, error){
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -54,6 +76,7 @@ func (m *postgreDBRepo) UpdateUser(u models.User) ( error){
 	}
 }
 
+//authenticate
 func (m *postgreDBRepo) Authenticate(email, password string) (int, string, error){
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -79,4 +102,138 @@ func (m *postgreDBRepo) Authenticate(email, password string) (int, string, error
 	}
 
 	return id, hashedPassword, nil
+}
+
+//create question
+func (m *postgreDBRepo) CreateQuestion(u models.Question) ( error){
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+	defer cancel()
+
+	query := `
+	INSERT INTO public.questions
+		(subject, categoryId, description, userId, created_at, updated_at)
+		VALUES($1, $2, $3, $4, $5, $6);
+		`
+
+	_, err := m.DB.ExecContext(ctx, query, u.Subject, u.Category, u.Description, u.UserId, time.Now(), time.Now())
+	if err != nil{
+		return err
+	}else{
+		return nil
+	}
+}
+
+//get question by Id
+func (m *postgreDBRepo) GetQuestionByID(id int) (models.Question, error){
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+	defer cancel()
+
+	query := `
+	select id, subject, categoryId, description, userId, created_at, updated_at from questions where id = $1`
+
+	row := m.DB.QueryRowContext(ctx, query, id)
+
+	var u models.Question
+
+	err:= row.Scan(
+		&u.ID, &u.Subject, &u.Category, &u.Description, &u.UserId, &u.CreatedAt, &u.UpdatedAt,
+	)
+
+	if err != nil{
+		return u, err
+	}else{
+		return u, nil
+	}
+}
+
+//get all question by UserId
+func (m *postgreDBRepo) GetQuestionsByUserID(userId int) ([]models.Question, error){
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+	defer cancel()
+
+	var questions []models.Question
+
+	query := `
+	select id, subject, categoryId, description, userId, created_at, updated_at from questions where userId = $1`
+
+	rows, err := m.DB.QueryContext(ctx, query, userId)
+
+	if err != nil {
+		return questions, err
+	}
+
+	for rows.Next(){
+		var question models.Question
+		err:= rows.Scan(
+			&question.ID,
+			&question.Subject,
+			&question.Category,
+			&question.Description,
+			&question.UserId,
+			&question.CreatedAt,
+			&question.UpdatedAt,
+		)
+
+		if err != nil {
+			return questions, err
+		}
+		questions = append(questions, question)
+	}
+
+	if  err = rows.Err(); err!=nil {
+		return questions, err
+		
+	}
+
+	return questions, nil
+}
+
+//get all question
+func (m *postgreDBRepo) GetQuestions() ([]models.Question, error){
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+	defer cancel()
+
+	var questions []models.Question
+
+	query := `
+	select id, subject, categoryId, description, userId, created_at, updated_at from questions`
+
+	rows, err := m.DB.QueryContext(ctx, query)
+
+	if err != nil {
+		return questions, err
+	}
+
+	for rows.Next(){
+		var question models.Question
+		err:= rows.Scan(
+			&question.ID,
+			&question.Subject,
+			&question.Category,
+			&question.Description,
+			&question.UserId,
+			&question.CreatedAt,
+			&question.UpdatedAt,
+		)
+		
+		if err != nil {
+			return questions, err
+		}
+		questions = append(questions, question)
+	}
+
+	if  err = rows.Err(); err!=nil {
+		return questions, err
+		
+	}
+
+	return questions, nil
 }

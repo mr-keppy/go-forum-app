@@ -1,0 +1,30 @@
+add_foreign_key("questions","categoryId",{"categories":["id"]},
+{
+    "name":"questions_categoryId_fk",
+    "on_delete":"cascade",
+    "on_update":"cascade",
+})
+add_foreign_key("questions","userId",{"users":["id"]},
+{
+     "name":"questions_user_fk",
+    "on_delete":"cascade",
+    "on_update":"cascade",
+})
+add_foreign_key("replies","userId",{"users":["id"]},
+{
+     "name":"replies_user_fk",
+    "on_delete":"cascade",
+    "on_update":"cascade",
+})
+add_foreign_key("replies","parentReplyId",{"replies":["id"]},
+{
+     "name":"replies_reply_fk",
+    "on_delete":"cascade",
+    "on_update":"cascade",
+})
+add_foreign_key("replies","questionId",{"questions":["id"]},
+{
+     "name":"replies_question_fk",
+    "on_delete":"cascade",
+    "on_update":"cascade",
+})

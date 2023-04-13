@@ -1,0 +1,2 @@
+INSERT INTO public.users (id,first_name,last_name,email,password,access_level,created_at,updated_at) VALUES
+	 (1,'Kishor','Padmanabhan','a@b.com','123',1,'2023-01-01 00:00:00.000','2023-01-01 00:00:00.000');

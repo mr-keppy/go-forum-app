@@ -1,0 +1,31 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container-fluid"  style="
+padding-top: 5%;
+padding-left: 4%;">
+<form class="row g-3">
+    <div class="col-md-6">
+      <label for="inputSubject" class="form-label">Subject</label>
+      <input type="text" class="form-control" id="inputSubject">
+    </div>
+    <div class="col-md-6">
+      <label for="inputCategory" class="form-label">Category</label>
+      <select class="form-select" aria-label="Default Category">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+    </div>
+    <div class="col-12">
+        <label for="inputDescription" class="form-label">Description</label>
+        <textarea class="form-control" id="inputDescription" rows="6"></textarea>
+    </div>
+    
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Post</button>
+    </div>
+  </form>
+</div>
+{{end}}

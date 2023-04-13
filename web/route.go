@@ -24,6 +24,8 @@ func routes(app *config.AppConfig) http.Handler{
 	mux.Use(SessionLoad)
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about",handlers.Repo.About)
+	mux.Get("/user/register",handlers.Repo.Register)
+	mux.Get("/ask-question",handlers.Repo.AskQuestion)
 
 	mux.Get("/user/login", handlers.Repo.ShowLogin)
 	mux.Post("/user/login", handlers.Repo.PostShowLogin)

@@ -1,0 +1,4 @@
+create_table("categories") {
+  t.Column("id", "serial", {primary:true})
+  t.Column("name", "string", {"size": 255})
+}

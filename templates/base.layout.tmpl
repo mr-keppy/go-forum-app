@@ -19,50 +19,22 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Forum</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Forums
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/generals-quarters">Major</a></li>
-                            <li><a class="dropdown-item" href="/majors-suite">Minor</a></li>
-                        </ul>
+                        <a class="nav-link" href="/questions">Questions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/search-availability">Ask Now</a>
+                        <a class="nav-link" href="/forum">Forum</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contacts">Contacts</a>
+                        <a class="nav-link" href="/ask-question">Ask Question</a>
                     </li>
                     <li class="nav-item">
-                        {{if eq .IsAuthenticated 1}}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Admin
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/admin/dashboard">Admin Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
-                            </ul>
-                        </li>
-                        {{else}}
-                        <a class="nav-link" href="/user/login">Login</a>
-                        {{end}}
+                        <a class="nav-link" href="/user/register">Register</a>
                     </li>
                 </ul>
             </div>
@@ -72,13 +44,13 @@
     {{end}}
     <div class="row my-footer">
         <div class="col">
-            footer 1
+           <b> © <a href="github.com/mr-keppy">github</a></b>
         </div>
         <div class="col">
-            footer 1
-        </div>
+            Kishor's Forum
+        </div> 
         <div class="col">
-            footer 1
+            <b>copyrights 2023</b>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"

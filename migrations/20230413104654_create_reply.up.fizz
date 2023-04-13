@@ -1,0 +1,7 @@
+create_table("replies") {
+  t.Column("id", "serial", {primary:true})
+  t.Column("questionId", "integer", {})
+  t.Column("parentReplyId", "integer", {})
+  t.Column("userId", "integer", {})
+  t.Column("description", "string", {"size": 4000})
+}
