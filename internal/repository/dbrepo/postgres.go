@@ -3,7 +3,10 @@ package dbrepo
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strconv"
 	"time"
+
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/mr-keppy/go-forum/internal/models"
@@ -13,8 +16,8 @@ func (m *postgreDBRepo) AllUsers() bool {
 	return true
 }
 
-//create user
-func (m *postgreDBRepo) CreateUser(u models.User) ( error){
+// create user
+func (m *postgreDBRepo) CreateUser(u models.User) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
@@ -26,16 +29,16 @@ func (m *postgreDBRepo) CreateUser(u models.User) ( error){
 		VALUES($1, $2, $3, $4, 1, $5, $6);
 		`
 
-	_, err := m.DB.ExecContext(ctx, query, u.FirstName, u.LastName, u.Email, u.Password, u.AccessLevel,time.Now(), time.Now())
-	if err != nil{
+	_, err := m.DB.ExecContext(ctx, query, u.FirstName, u.LastName, u.Email, u.Password, u.AccessLevel, time.Now(), time.Now())
+	if err != nil {
 		return err
-	}else{
+	} else {
 		return nil
 	}
 }
 
-//get user
-func (m *postgreDBRepo) GetUserByID(id int) (models.User, error){
+// get user
+func (m *postgreDBRepo) GetUserByID(id int) (models.User, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
@@ -48,18 +51,18 @@ func (m *postgreDBRepo) GetUserByID(id int) (models.User, error){
 
 	var u models.User
 
-	err:= row.Scan(
+	err := row.Scan(
 		&u.ID, u.FirstName, u.LastName, u.Email, u.Password, u.AccessLevel,
 	)
-	if err != nil{
+	if err != nil {
 		return u, err
-	}else{
+	} else {
 		return u, nil
 	}
 }
 
-//update user 
-func (m *postgreDBRepo) UpdateUser(u models.User) ( error){
+// update user
+func (m *postgreDBRepo) UpdateUser(u models.User) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
@@ -69,15 +72,15 @@ func (m *postgreDBRepo) UpdateUser(u models.User) ( error){
 	update users set  first_name=$1, last_name=$2, email=$3, access_level=$4, updated_at=$5 where id = $6`
 
 	_, err := m.DB.ExecContext(ctx, query, u.FirstName, u.LastName, u.Email, u.AccessLevel, time.Now())
-	if err != nil{
+	if err != nil {
 		return err
-	}else{
+	} else {
 		return nil
 	}
 }
 
-//authenticate
-func (m *postgreDBRepo) Authenticate(email, password string) (int, string, error){
+// authenticate
+func (m *postgreDBRepo) Authenticate(email, password string) (int, string, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
@@ -86,26 +89,26 @@ func (m *postgreDBRepo) Authenticate(email, password string) (int, string, error
 	var id int
 	var hashedPassword string
 
-	row:= m.DB.QueryRowContext(ctx, "select id, password from users where email=$1", email)
-	err:= row.Scan(&id, &hashedPassword)
+	row := m.DB.QueryRowContext(ctx, "select id, password from users where email=$1", email)
+	err := row.Scan(&id, &hashedPassword)
 
-	if err!=nil{
+	if err != nil {
 		return id, "", err
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword),[]byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 
-	if err == bcrypt.ErrMismatchedHashAndPassword{
+	if err == bcrypt.ErrMismatchedHashAndPassword {
 		return 0, "", errors.New("incorrect username/password")
-	}else if err!=nil{
-		return 0, "",err
+	} else if err != nil {
+		return 0, "", err
 	}
 
 	return id, hashedPassword, nil
 }
 
-//create question
-func (m *postgreDBRepo) CreateQuestion(u models.Question) ( error){
+// create question
+func (m *postgreDBRepo) CreateQuestion(u models.Question) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
@@ -113,45 +116,50 @@ func (m *postgreDBRepo) CreateQuestion(u models.Question) ( error){
 
 	query := `
 	INSERT INTO public.questions
-		(subject, categoryId, description, userId, created_at, updated_at)
-		VALUES($1, $2, $3, $4, $5, $6);
-		`
+	(subject, categoryid, description, userid, created_at, updated_at)
+		VALUES($1, $2, $3, $4, $5, $6) returning id`
 
-	_, err := m.DB.ExecContext(ctx, query, u.Subject, u.Category, u.Description, u.UserId, time.Now(), time.Now())
-	if err != nil{
+	categoryId, _ := strconv.Atoi(u.Category)
+
+	fmt.Printf("output:", u.Subject, categoryId, u.Description, u.UserId)
+
+	var newId int
+
+	err := m.DB.QueryRowContext(ctx, query, u.Subject, categoryId, u.Description, u.UserId, time.Now(), time.Now()).Scan(&newId)
+	if err != nil {
 		return err
-	}else{
+	} else {
 		return nil
 	}
 }
 
-//get question by Id
-func (m *postgreDBRepo) GetQuestionByID(id int) (models.Question, error){
+// get question by Id
+func (m *postgreDBRepo) GetQuestionByID(id int) (models.Question, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
 	defer cancel()
 
 	query := `
-	select id, subject, categoryId, description, userId, created_at, updated_at from questions where id = $1`
+	select id, subject, categoryid, description, userid, created_at, updated_at from questions where id = $1`
 
 	row := m.DB.QueryRowContext(ctx, query, id)
 
 	var u models.Question
 
-	err:= row.Scan(
+	err := row.Scan(
 		&u.ID, &u.Subject, &u.Category, &u.Description, &u.UserId, &u.CreatedAt, &u.UpdatedAt,
 	)
 
-	if err != nil{
+	if err != nil {
 		return u, err
-	}else{
+	} else {
 		return u, nil
 	}
 }
 
-//get all question by UserId
-func (m *postgreDBRepo) GetQuestionsByUserID(userId int) ([]models.Question, error){
+// get all question by UserId
+func (m *postgreDBRepo) GetQuestionsByUserID(userId int) ([]models.Question, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
@@ -168,9 +176,9 @@ func (m *postgreDBRepo) GetQuestionsByUserID(userId int) ([]models.Question, err
 		return questions, err
 	}
 
-	for rows.Next(){
+	for rows.Next() {
 		var question models.Question
-		err:= rows.Scan(
+		err := rows.Scan(
 			&question.ID,
 			&question.Subject,
 			&question.Category,
@@ -186,16 +194,16 @@ func (m *postgreDBRepo) GetQuestionsByUserID(userId int) ([]models.Question, err
 		questions = append(questions, question)
 	}
 
-	if  err = rows.Err(); err!=nil {
+	if err = rows.Err(); err != nil {
 		return questions, err
-		
+
 	}
 
 	return questions, nil
 }
 
-//get all question
-func (m *postgreDBRepo) GetQuestions() ([]models.Question, error){
+// get all question
+func (m *postgreDBRepo) GetQuestions() ([]models.Question, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
@@ -212,9 +220,9 @@ func (m *postgreDBRepo) GetQuestions() ([]models.Question, error){
 		return questions, err
 	}
 
-	for rows.Next(){
+	for rows.Next() {
 		var question models.Question
-		err:= rows.Scan(
+		err := rows.Scan(
 			&question.ID,
 			&question.Subject,
 			&question.Category,
@@ -223,16 +231,16 @@ func (m *postgreDBRepo) GetQuestions() ([]models.Question, error){
 			&question.CreatedAt,
 			&question.UpdatedAt,
 		)
-		
+
 		if err != nil {
 			return questions, err
 		}
 		questions = append(questions, question)
 	}
 
-	if  err = rows.Err(); err!=nil {
+	if err = rows.Err(); err != nil {
 		return questions, err
-		
+
 	}
 
 	return questions, nil

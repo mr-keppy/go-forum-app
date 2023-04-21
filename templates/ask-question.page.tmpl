@@ -4,23 +4,24 @@
 <div class="container-fluid"  style="
 padding-top: 5%;
 padding-left: 4%;">
-<form class="row g-3">
+<form class="row g-3" method="post" action="/ask-question" novalidate>
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
     <div class="col-md-6">
-      <label for="inputSubject" class="form-label">Subject</label>
-      <input type="text" class="form-control" id="inputSubject">
+      <label for="subject" class="form-label">Subject</label>
+      <input type="text" name="subject" class="form-control" id="subject">
     </div>
     <div class="col-md-6">
-      <label for="inputCategory" class="form-label">Category</label>
-      <select class="form-select" aria-label="Default Category">
+      <label for="category" class="form-label">Category</label>
+      <select class="form-select" id="category" name="category" aria-label="Default Category">
         <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+        <option value="1">C#</option>
+        <option value="2">Java</option>
+        <option value="3">Go</option>
       </select>
     </div>
     <div class="col-12">
-        <label for="inputDescription" class="form-label">Description</label>
-        <textarea class="form-control" id="inputDescription" rows="6"></textarea>
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" name="description" id="description" rows="6"></textarea>
     </div>
     
     <div class="col-12">

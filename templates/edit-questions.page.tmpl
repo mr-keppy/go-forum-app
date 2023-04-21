@@ -1,4 +1,45 @@
+
 {{template "base" .}}
 
 {{define "content"}}
+<div class="container-fluid"  style="
+padding-top: 5%;
+padding-left: 4%;">
+<div class="row">
+    <h1 class="mt-5">View Question</h1>
+    <hr />
+</div>
+{{$res := index .Data "question"}}
+<form class="row g-3" method="post" action="/edit-question/{{$res.ID}}" novalidate>
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
+    <div class="col-md-6">
+      <label for="subject" class="form-label">Subject</label>
+      <input type="text" name="subject" value="{{$res.Subject}} class="form-control" id="subject">
+    </div>
+    <div class="col-md-6">
+        <label for="category" class="form-label">Category</label>
+        <select class="form-select" id="category" name="category" aria-label="Default Category">
+          <option selected>Open this select menu</option>
+          <option value="1">C#</option>
+          <option value="2">Java</option>
+          <option value="3">Go</option>
+        </select>
+      </div>
+    <div class="col-12">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" readonly name="description" value="{{$res.Description}} id="description" rows="6"></textarea>
+    </div>
+    <div class="col-12">
+        <label for="userid" class="form-label">Created By</label>
+        <input type="text" readonly value="{{$res.UserId}} name="userid" class="form-control" id="userid">
+    </div>
+    <div class="col-12">
+        <label for="createdat" class="form-label">Created On</label>
+        <input type="text" value="{{$res.CreatedAt}} readonly name="createdat" class="form-control" id="createdat">
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
+</div>
 {{end}}

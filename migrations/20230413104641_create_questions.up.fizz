@@ -1,7 +1,7 @@
 create_table("questions") {
   t.Column("id", "serial", {primary:true})
   t.Column("subject", "string", {"size": 255})
-  t.Column("categoryId", "integer", {})
+  t.Column("categoryid", "integer", {})
   t.Column("description", "string", {"size": 4000})
-  t.Column("userId", "integer", {})
+  t.Column("userid", "integer", {})
 }

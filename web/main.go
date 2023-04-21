@@ -28,6 +28,9 @@ var errorLog *log.Logger
 //this is main
 func run() (*driver.DB, error){
 	gob.Register(models.User{})
+	gob.Register(models.Question{})
+	gob.Register(models.Reply{})
+	gob.Register(models.TemplateData{})
 
 	inProduction := *flag.Bool("production",true, "Application is in production")
 	useCache:= *flag.Bool("cache",true, "use template cache")

@@ -26,6 +26,11 @@ func routes(app *config.AppConfig) http.Handler{
 	mux.Get("/about",handlers.Repo.About)
 	mux.Get("/user/register",handlers.Repo.Register)
 	mux.Get("/ask-question",handlers.Repo.AskQuestion)
+	mux.Post("/ask-question",handlers.Repo.PostAskQuestion)
+	mux.Get("/questions",handlers.Repo.AllQuestions)
+	mux.Get("/view-question/{id}",handlers.Repo.ViewQuestion)
+	mux.Get("/edit-question/{id}",handlers.Repo.EditQuestion)
+	mux.Post("/edit-question/{id}",handlers.Repo.PostEditQuestion)
 
 	mux.Get("/user/login", handlers.Repo.ShowLogin)
 	mux.Post("/user/login", handlers.Repo.PostShowLogin)
